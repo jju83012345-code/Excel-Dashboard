@@ -1,43 +1,471 @@
-LG VS 
-/ LinkedIn Dashboard
-업데이트: 2026-05-27
-Overview
-팔로워
-185,416
-전주 대비 +1,062
-목표 200,000 · 92.7%
-총 노출수 (최근 20개)
-140.9K
-포스팅 10개 합산
-총 반응수
-3,443
-Likes + Comments + Shares
-평균 Engagement Rate
-5.27%
-(반응+클릭+댓글) / 노출
-Trends
-팔로워 추이
-포스팅 성과 분포
-Posts Performance
-최근 포스팅 성과 (최신 20개)
-포스팅	노출	반응	클릭	댓글	Eng.Rate
-CES 2026 Highlight Video
-14,107	181	321	39	3.46%
-LG on board 2 Expert Answer
-12,967	328	94	19	6.63%
-LinkedIn Newsletter
-11,248	474	230	87	7.41%
-GAPB 2026
-16,547	182	257	36	5.18%
-LINK Talk
-7,900	324	94	33	5.44%
-Windshield Display
-12,423	175	172	83	8.24%
-Transformable Display
-17,810	828	72	87	1.04%
-Expert Answer Teaser
-16,253	248	240	42	7.42%
-LGEVU Earth Day
-17,286	339	233	35	6%
-LG on board 2 Opening
-14,328	364	95	80	1.91%
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LG VS LinkedIn Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0a0a0f;
+    --surface:  #12121a;
+    --card:     #1a1a26;
+    --border:   #2a2a3a;
+    --red:      #c8102e;
+    --red-dim:  #8a0b20;
+    --green:    #22c55e;
+    --yellow:   #f59e0b;
+    --blue:     #3b82f6;
+    --text:     #f0f0f5;
+    --muted:    #6b6b80;
+    --mono:     'DM Mono', monospace;
+    --sans:     'DM Sans', sans-serif;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* ── Header ─────────────────────────────────────────────── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+  .logo-dot {
+    width: 8px; height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.5; transform: scale(1.4); }
+  }
+  .last-updated {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* ── Layout ──────────────────────────────────────────────── */
+  main { max-width: 1280px; margin: 0 auto; padding: 40px 40px 0; }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    padding-left: 12px;
+    border-left: 2px solid var(--red);
+  }
+
+  /* ── KPI Grid ────────────────────────────────────────────── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .kpi-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .kpi-card:hover { border-color: var(--red-dim); }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent, var(--red));
+  }
+  .kpi-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .kpi-value {
+    font-family: var(--mono);
+    font-size: 36px;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .kpi-sub {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .kpi-sub span { color: var(--green); font-weight: 500; }
+  .kpi-sub span.down { color: #ef4444; }
+
+  /* ── Progress Bar ────────────────────────────────────────── */
+  .progress-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), #ff4560);
+    border-radius: 2px;
+    transition: width 1s ease;
+  }
+
+  /* ── Chart Grid ──────────────────────────────────────────── */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+  }
+  .chart-card h3 {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+  .chart-wrap { position: relative; height: 220px; }
+
+  /* ── Posts Table ─────────────────────────────────────────── */
+  .table-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+  .table-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .table-header h3 { font-size: 13px; font-weight: 500; color: var(--muted); letter-spacing: 0.5px; }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { border-bottom: 1px solid var(--border); }
+  th {
+    padding: 12px 20px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  th:not(:first-child) { text-align: right; }
+  td {
+    padding: 14px 20px;
+    font-size: 13px;
+    border-bottom: 1px solid #1e1e2a;
+    vertical-align: middle;
+  }
+  td:not(:first-child) { text-align: right; font-family: var(--mono); font-size: 12px; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #1e1e2e; }
+  .post-title {
+    display: block;
+    max-width: 360px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 13px;
+  }
+  .post-title:hover { color: var(--red); }
+  .eng-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .eng-high { background: #14532d33; color: var(--green); }
+  .eng-mid  { background: #78350f33; color: var(--yellow); }
+  .eng-low  { background: #1e1e2e;   color: var(--muted); }
+
+  /* ── Loading / Error ─────────────────────────────────────── */
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    color: var(--muted);
+    font-size: 13px;
+    gap: 10px;
+  }
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Responsive ──────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    main { padding: 24px 20px 0; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .chart-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    LG VS&nbsp;<span style="color:var(--muted);font-weight:400">/ LinkedIn Dashboard</span>
+  </div>
+  <div class="last-updated" id="lastUpdated">로딩 중...</div>
+</header>
+
+<main>
+  <div id="app">
+    <div class="loading"><div class="spinner"></div> 데이터 불러오는 중...</div>
+  </div>
+</main>
+
+<script>
+// ── 데이터 로드 ────────────────────────────────────────────────────
+async function loadData() {
+  try {
+    const res = await fetch('data.json?t=' + Date.now());
+    if (!res.ok) throw new Error('data.json 없음');
+    return await res.json();
+  } catch (e) {
+    // 개발용 목업 데이터
+    return getMockData();
+  }
+}
+
+function getMockData() {
+  const today = new Date();
+  const history = Array.from({length: 12}, (_, i) => {
+    const d = new Date(today); d.setDate(d.getDate() - (11-i)*7);
+    return { date: d.toISOString().slice(0,10), count: 170000 + i*1400 + Math.random()*500|0 };
+  });
+  return {
+    last_updated: today.toISOString().slice(0,10),
+    follower_count: history.at(-1).count,
+    follower_goal: 200000,
+    follower_history: history,
+    posts: Array.from({length: 10}, (_, i) => ({
+      urn: `urn:li:activity:${7400000000000000000n + BigInt(i)}`,
+      url: 'https://www.linkedin.com',
+      text: ['CES 2026 Highlight Video', 'LG on board 2 Expert Answer', 'LinkedIn Newsletter', 'GAPB 2026', 'LINK Talk', 'Windshield Display', 'Transformable Display', 'Expert Answer Teaser', 'LGEVU Earth Day', 'LG on board 2 Opening'][i],
+      date: today.toISOString().slice(0,10),
+      impressions: 3000 + Math.random()*15000|0,
+      reactions:   100 + Math.random()*800|0,
+      clicks:      50  + Math.random()*400|0,
+      comments:    10  + Math.random()*80|0,
+      shares:      5   + Math.random()*50|0,
+      eng_rate:    parseFloat((Math.random()*8+0.5).toFixed(2)),
+    }))
+  };
+}
+
+// ── 렌더링 ─────────────────────────────────────────────────────────
+function render(data) {
+  const { follower_count, follower_goal, follower_history, posts, last_updated } = data;
+  const prev = follower_history.length >= 2 ? follower_history.at(-2).count : follower_count;
+  const weeklyChange = follower_count - prev;
+  const goalPct = Math.min(follower_count / follower_goal * 100, 100).toFixed(1);
+
+  const totalImpr = posts.reduce((s,p) => s + p.impressions, 0);
+  const totalReac = posts.reduce((s,p) => s + p.reactions, 0);
+  const avgEng    = posts.length ? (posts.reduce((s,p) => s + p.eng_rate, 0) / posts.length).toFixed(2) : 0;
+
+  document.getElementById('lastUpdated').textContent = `업데이트: ${last_updated}`;
+
+  document.getElementById('app').innerHTML = `
+    <!-- KPI -->
+    <div class="section-title" style="margin-bottom:16px">Overview</div>
+    <div class="kpi-grid">
+      <div class="kpi-card" style="--accent:var(--red)">
+        <div class="kpi-label">팔로워</div>
+        <div class="kpi-value">${follower_count.toLocaleString()}</div>
+        <div class="kpi-sub">전주 대비 <span class="${weeklyChange>=0?'':'down'}">${weeklyChange>=0?'+':''}${weeklyChange.toLocaleString()}</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${goalPct}%"></div></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px;font-family:var(--mono)">목표 ${follower_goal.toLocaleString()} · ${goalPct}%</div>
+      </div>
+      <div class="kpi-card" style="--accent:var(--blue)">
+        <div class="kpi-label">총 노출수 (최근 20개)</div>
+        <div class="kpi-value">${(totalImpr/1000).toFixed(1)}<span style="font-size:18px;color:var(--muted)">K</span></div>
+        <div class="kpi-sub">포스팅 ${posts.length}개 합산</div>
+      </div>
+      <div class="kpi-card" style="--accent:var(--green)">
+        <div class="kpi-label">총 반응수</div>
+        <div class="kpi-value">${totalReac.toLocaleString()}</div>
+        <div class="kpi-sub">Likes + Comments + Shares</div>
+      </div>
+      <div class="kpi-card" style="--accent:var(--yellow)">
+        <div class="kpi-label">평균 Engagement Rate</div>
+        <div class="kpi-value">${avgEng}<span style="font-size:18px;color:var(--muted)">%</span></div>
+        <div class="kpi-sub">(반응+클릭+댓글) / 노출</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="section-title">Trends</div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>팔로워 추이</h3>
+        <div class="chart-wrap"><canvas id="followerChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>포스팅 성과 분포</h3>
+        <div class="chart-wrap"><canvas id="engChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="section-title">Posts Performance</div>
+    <div class="table-card">
+      <div class="table-header">
+        <h3>최근 포스팅 성과 (최신 20개)</h3>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>포스팅</th>
+            <th>노출</th>
+            <th>반응</th>
+            <th>클릭</th>
+            <th>댓글</th>
+            <th>Eng.Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${posts.map(p => {
+            const eng = parseFloat(p.eng_rate);
+            const badge = eng >= 3 ? 'eng-high' : eng >= 1 ? 'eng-mid' : 'eng-low';
+            return `<tr>
+              <td><a class="post-title" href="${p.url}" target="_blank">${p.text || p.urn.slice(-20)}</a></td>
+              <td>${p.impressions.toLocaleString()}</td>
+              <td>${p.reactions.toLocaleString()}</td>
+              <td>${p.clicks.toLocaleString()}</td>
+              <td>${p.comments.toLocaleString()}</td>
+              <td><span class="eng-badge ${badge}">${eng}%</span></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  drawCharts(data);
+}
+
+// ── 차트 ───────────────────────────────────────────────────────────
+function drawCharts({ follower_history, posts }) {
+  const gridColor = '#2a2a3a';
+  Chart.defaults.color = '#6b6b80';
+  Chart.defaults.font.family = "'DM Mono', monospace";
+  Chart.defaults.font.size = 11;
+
+  // 팔로워 추이
+  new Chart(document.getElementById('followerChart'), {
+    type: 'line',
+    data: {
+      labels: follower_history.map(h => h.date.slice(5)),
+      datasets: [{
+        data:            follower_history.map(h => h.count),
+        borderColor:     '#c8102e',
+        backgroundColor: 'rgba(200,16,46,0.08)',
+        borderWidth:     2,
+        pointRadius:     3,
+        pointBackgroundColor: '#c8102e',
+        fill: true,
+        tension: 0.4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { maxTicksLimit: 6 } },
+        y: { grid: { color: gridColor }, ticks: { callback: v => (v/1000).toFixed(0)+'K' } }
+      }
+    }
+  });
+
+  // 포스팅 Engagement 분포 (bar)
+  const sorted = [...posts].sort((a,b) => b.impressions - a.impressions).slice(0, 8);
+  new Chart(document.getElementById('engChart'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(p => (p.text || '').slice(0,12) + '…'),
+      datasets: [{
+        label: '노출수',
+        data: sorted.map(p => p.impressions),
+        backgroundColor: sorted.map(p =>
+          p.eng_rate >= 3 ? 'rgba(34,197,94,0.7)' :
+          p.eng_rate >= 1 ? 'rgba(245,158,11,0.7)' :
+                            'rgba(59,130,246,0.7)'
+        ),
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { callback: v => (v/1000).toFixed(0)+'K' } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ── 실행 ───────────────────────────────────────────────────────────
+loadData().then(render);
+</script>
+</body>
+</html>
